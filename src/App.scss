@@ -1,0 +1,16 @@
+.App {
+  text-align: center;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-top: 1px solid grey;
+  border-left: 1px solid grey;
+  border-right: 1px solid grey;
+
+  span {
+    padding:8px 4px;
+    border-bottom: 1px solid grey;
+  }
+}
