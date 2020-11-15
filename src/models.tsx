@@ -4,21 +4,20 @@ export interface JSONObject {
   [key: string]: any
 }
 
-export interface Contact {
+// export interface Contact {
+//   id: string,
+//   name: string,
+//   geoIps: string[],
+//   deals: string[],
+//   tags: string[]
+// };
+
+export interface ContactLookup {
   id: string,
   firstName: string,
   lastName: string,
   geoIps: string[],
-  deals: string[],
-  contactTags: string[]
-};
-
-export interface ContactLookup {
-  id: string,
-  name: string,
-  geoIps: string[],
-  deals: string[],
-  tags: string[]
+  deals: string[]
 };
 
 export interface ContactDetails {

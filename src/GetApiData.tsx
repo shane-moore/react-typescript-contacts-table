@@ -1,31 +1,34 @@
-import { ContactLookup, JSONObject, Contact, FilteredList, ContactDetails, CRMList, GeoIPS, GeoAddress, CurrencySymbolsDictionary, Deal, ContactTag, Tag } from './models';
+import { ContactLookup, JSONObject, FilteredList, ContactDetails, CRMList, GeoIPS, GeoAddress, CurrencySymbolsDictionary, Deal, ContactTag, Tag } from './models';
 
 
-export function filterAPIData(json: JSONObject, cRMList: CRMList): CRMList {
+export function filterAPIData(json: JSONObject): CRMList {
   // create filteredList to hold an array of ContactLookup data
   const filteredList: FilteredList = [];
 
   // create filteredList using useful data from json.contacts
-  json.contacts.forEach((contact: Contact) => {
+  json.contacts.forEach((contact: ContactLookup) => {
+    // variable to hold data for each contact to add to filteredList
     const contactLookup: ContactLookup = {
       id: contact.id,
-      name: `${contact.firstName} ${contact.lastName}`,
+      firstName: contact.firstName,
+      lastName: contact.lastName,
       geoIps: contact.geoIps,
-      deals: contact.deals,
-      tags: contact.contactTags
+      deals: contact.deals
     }
-    // add details about each contact to the filteredList array that are required to compare against json object later in order to create the cRMList
+    // add details about each contact to the filteredList array that are required to compare against json object later in order to create the fully formatted cRMList
     filteredList.push(contactLookup);
   });
-  console.log(filteredList);
-  //  call the setCRMList useState function to set the cRMList state variable to the finalized cRMList
-  return createCRMList(json, filteredList, cRMList);
+  //  return the fully formatted cRMList to the setCRMList state function
+  return createCRMList(json, filteredList);
 
 }
 
-function createCRMList(json: JSONObject, filteredList: FilteredList, cRMList: CRMList): CRMList {
-  const cRM = filteredList.map(contact => {
-    const contactDetails = {
+function createCRMList(json: JSONObject, filteredList: FilteredList): CRMList {
+  // cRMList will hold fully formatted array of contact data objects, which will be ready to present to UI via mapping over JSX
+  const cRMList: CRMList = filteredList.map(contact => {
+
+    // create placeholder object for fully formatted contact details
+    const contactDetails: ContactDetails = {
       deals: '',
       dealsTotal: '',
       location: '',
@@ -34,28 +37,31 @@ function createCRMList(json: JSONObject, filteredList: FilteredList, cRMList: CR
     };
 
     // add contact first and last name to contactDetails object
-    contactDetails.name = contact.name;
+    contactDetails.name = `${contact.firstName} ${contact.lastName}`;
 
+    // get location of contact if available
     if (contact.geoIps.length > 0) {
       getContactLocation(json, contact, contactDetails);
     } else contactDetails.location = '';
 
+    // get deals and value of deals of contact if available
     if (contact.deals.length > 0) {
       getClientDealsAndTotals(json, contact, contactDetails);
     } else contactDetails.deals = '';
 
+    // get tags associated with a contact
     getClientTags(json, contact, contactDetails);
 
     // add contactDetailsObject to the new list
     return contactDetails;
   });
   // return array of the final cRMList to the setCRMList state function
-  return cRM;
+  return cRMList;
 }
 
 function getContactLocation(json: JSONObject, contact: ContactLookup, contactDetails: ContactDetails): void {
   // get locations associated with contact
-  let location = '';
+  let location: string = '';
   // loop over geoIps object and check if the contact property matches the contact's id
   json.geoIps.forEach((geo: GeoIPS) => {
     if (geo.contact == contact.id) {
@@ -83,16 +89,16 @@ function getClientDealsAndTotals(json: JSONObject, contact: ContactLookup, conta
   }
 
   // variable to store total value of deal
-  let total = 0;
+  let total: number = 0;
 
-  // final currency symbol of the deal
-  let finalCurrency = '';
+  // placeholder for final currency symbol of the deal
+  let finalCurrency: string = '';
 
   // find deals associated with the contact
   json.deals.forEach((deal: Deal) => {
     if (deal.contact == contact.id) {
 
-      // check if multiple deals are associated with a contact, one, or none
+      // check if multiple, one, or no  deals are associated with a contact
       if (contact.deals.length == 1) {
         // deal may be given in another currency but contact is located in US so assume they want USD so need to convert to USD
         if (contactDetails.location.includes('United States')) {
@@ -106,7 +112,7 @@ function getClientDealsAndTotals(json: JSONObject, contact: ContactLookup, conta
         }
       } else if (contact.deals.length > 1) {
         // assuming to convert to AUD as default if no US location is listed and deals are listed in multiple currencies since the deals for contacts 193 and 168 both have deals in AUD, and they are the only two contacts with deals in multiple currencies
-        if (!contactDetails.location?.includes('United States')) {
+        if (!contactDetails.location.includes('United States')) {
           finalCurrency = 'AUD';
           total += convertToAUD(deal.currency, Number(deal.value));
         } else {
@@ -124,21 +130,22 @@ function getClientDealsAndTotals(json: JSONObject, contact: ContactLookup, conta
 
 // helper function to convert currencies to aud
 function convertToAUD(currency: string, amount: number) {
-  // if currency isn't 'aud', convert to aud from euro or else usd
+  // if currency isn't 'aud', convert to aud from euro or else convert from usd
   if (currency !== 'aud') {
-    return currency == 'eur' ? (amount * 1.63) : (amount * 1.38);
+    return currency == 'eur' ? (amount * 1.63) : (amount * 1.37);
   } else return amount;
 
 }
 
 // helper function to convert currencies to USD
 function convertToUSD(currency: string, amount: number) {
-  // if currency isn't 'usd', convert to usd from euro or else aud
+  // if currency isn't 'usd', convert to usd from euro or else convert from aud
   if (currency !== 'usd') {
     return currency == 'eur' ? (amount * 1.18) : (amount * 0.73);
   } else return Number(amount);
 }
 
+// get tags associated with each client
 function getClientTags(json: JSONObject, contact: ContactLookup, clientDetails: ContactDetails) {
   const tagsList: string[] = [];
 
