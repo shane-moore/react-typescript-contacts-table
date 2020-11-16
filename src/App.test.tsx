@@ -1,9 +1,11 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import App from './App';
+import { act } from 'react-dom/test-utils';
 
-test('renders learn react link', () => {
+
+test('successfully fetched API data and rendered to screen', async () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+
+  expect(await screen.findByText(/Contact/)).toBeInTheDocument();
 });

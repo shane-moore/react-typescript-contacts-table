@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import './App.scss';
 import { JSONObject, ContactDetails, CRMList } from './models';
 import { filterAPIData } from './GetApiData';
-import { JsxEmit } from 'typescript';
 
 function App() {
 
@@ -23,16 +22,21 @@ function App() {
     } else {
       const json: JSONObject = await response.json();
       // pass API results along to be filtered and formatted and return back an updated cRMList state variable
-      setCRMList(filterAPIData(json))
+      setCRMList(filterAPIData(json));
+
     }
   }
 
-  getAPIData();
+  // only call the API once
+  if (!cRMList.length) {
+    getAPIData();
+  }
+
 
   // return CRM data as JSX to the mapping function
   function clientResultsMap(client: ContactDetails): JSX.Element {
     return (
-      <React.Fragment>
+      <React.Fragment key={client.name}>
         <span>{client.name}</span>
         <span>{client.dealsTotal}</span>
         <span>{client.location}</span>
@@ -47,21 +51,21 @@ function App() {
   return (
     <main>
       <section>
-        <div className="grid">
+        <div className={cRMList.length ? 'grid' : ''}>
           <span>
-            <strong>Contact</strong>
+            <strong>{cRMList.length ? 'Contact' : ''}</strong>
           </span>
           <span>
-            <strong>Total Value</strong>
+            <strong>{cRMList.length ? 'Total Value' : ''}</strong>
           </span>
           <span>
-            <strong>Location</strong>
+            <strong>{cRMList.length ? 'Location' : ''}</strong>
           </span>
           <span>
-            <strong>Deals</strong>
+            <strong>{cRMList.length ? 'Deals' : ''}</strong>
           </span>
           <span>
-            <strong>Tags</strong>
+            <strong>{cRMList.length ? 'Tags' : ''}</strong>
           </span>
           {
             cRMList.map((client: ContactDetails) => { return clientResultsMap(client) }
