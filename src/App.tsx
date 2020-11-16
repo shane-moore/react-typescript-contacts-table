@@ -37,11 +37,11 @@ function App() {
   function clientResultsMap(client: ContactDetails): JSX.Element {
     return (
       <React.Fragment key={client.name}>
-        <span>{client.name}</span>
+        <span className="table__row-contact-name">{client.name}</span>
         <span>{client.dealsTotal}</span>
         <span>{client.location}</span>
         <span>{client.deals}</span>
-        <span>{client.tags}</span>
+        <span className="table__row-contact-tag">{client.tags}</span>
       </React.Fragment>
 
     );
@@ -52,21 +52,11 @@ function App() {
     <main>
       <section>
         <div className={cRMList.length ? 'grid' : ''}>
-          <span>
-            <strong>{cRMList.length ? 'Contact' : ''}</strong>
-          </span>
-          <span>
-            <strong>{cRMList.length ? 'Total Value' : ''}</strong>
-          </span>
-          <span>
-            <strong>{cRMList.length ? 'Location' : ''}</strong>
-          </span>
-          <span>
-            <strong>{cRMList.length ? 'Deals' : ''}</strong>
-          </span>
-          <span>
-            <strong>{cRMList.length ? 'Tags' : ''}</strong>
-          </span>
+          <div>{cRMList.length ? 'Contact' : ''}</div>
+          <div>{cRMList.length ? 'Total Value' : ''}</div>
+          <div>{cRMList.length ? 'Location' : ''}</div>
+          <div>{cRMList.length ? 'Deals' : ''}</div>
+          <div>{cRMList.length ? 'Tags' : ''}</div>
           {
             cRMList.map((client: ContactDetails) => { return clientResultsMap(client) }
             )

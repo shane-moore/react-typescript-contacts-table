@@ -166,7 +166,7 @@ function getClientTags(json: JSONObject, contact: ContactLookup, clientDetails: 
       // loop over tags and if there is an id match, add tag to array
       json.tags.forEach((tag: Tag) => {
         if (tag.id == contactTag.tag) {
-          tagsList.push(tag.tag);
+          tagsList.push(tag.tag.toLowerCase());
         }
       })
       // join array and add to clientDetails object
@@ -175,6 +175,7 @@ function getClientTags(json: JSONObject, contact: ContactLookup, clientDetails: 
   })
 }
 
+// helper function to convert state or country to abbreviated form
 function abbrStateOrCountry(name: string | undefined): string | undefined {
 
   var statesAndCountries: Array<Array<string>> = [
@@ -240,6 +241,7 @@ function abbrStateOrCountry(name: string | undefined): string | undefined {
   }
 }
 
+// helper function to add commas to the total deal values' thousand place
 function addCommas(nStr: string) {
   nStr += '';
   var x = nStr.split('.');
