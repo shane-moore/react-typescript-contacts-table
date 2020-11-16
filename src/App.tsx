@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.scss';
 import { JSONObject, ContactDetails, CRMList } from './models';
-import { filterAPIData } from './GetApiData';
+import { filterAPIData } from './FilterAPIData';
 
 function App() {
 

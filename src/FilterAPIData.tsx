@@ -68,6 +68,13 @@ function getContactLocation(json: JSONObject, contact: ContactLookup, contactDet
       // loop over geoAddresses and if there is an id match, set location to the corresponding city, state, and country
       json.geoAddresses.forEach((address: GeoAddress) => {
         if (address.id == geo.geoaddrid) {
+          console.log(address.state)
+          if (address.state && address.state.length > 3) {
+            address.state = abbrStateOrCountry(address.state);
+            address.country = abbrStateOrCountry(address.country);
+          }
+
+          console.log(address.state)
           location = `${address.city}, ${address.state}, ${address.country}`;
         }
       })
@@ -101,7 +108,7 @@ function getClientDealsAndTotals(json: JSONObject, contact: ContactLookup, conta
       // check if multiple, one, or no  deals are associated with a contact
       if (contact.deals.length == 1) {
         // deal may be given in another currency but contact is located in US so assume they want USD so need to convert to USD
-        if (contactDetails.location.includes('United States')) {
+        if (contactDetails.location.includes('USA')) {
           total = convertToUSD(deal.currency, Number(deal.value));
           finalCurrency = 'USD';
           // set return objects dealsTotal to include the currency symbol, amount, and currency
@@ -123,8 +130,11 @@ function getClientDealsAndTotals(json: JSONObject, contact: ContactLookup, conta
     }
   });
 
+  total = Math.floor(total / 100);
+  let stringifiedTotalWithCommas: string = addCommas(String(total));
+
   // set return objects dealsTotal to include the currency symbol, amount, and currency for the multiple deals scenario
-  contactDetails.dealsTotal = `${currencySymbolsDictionary[finalCurrency.toLowerCase()]}${Math.floor(total / 100)} ${finalCurrency}`;
+  contactDetails.dealsTotal = `${currencySymbolsDictionary[finalCurrency.toLowerCase()]}${stringifiedTotalWithCommas} ${finalCurrency}`;
 }
 
 
@@ -163,4 +173,81 @@ function getClientTags(json: JSONObject, contact: ContactLookup, clientDetails: 
       clientDetails.tags = tagsList.join(', ');
     }
   })
+}
+
+function abbrStateOrCountry(name: string | undefined): string | undefined {
+
+  var statesAndCountries: Array<Array<string>> = [
+    ['Arizona', 'AZ'],
+    ['Alabama', 'AL'],
+    ['Alaska', 'AK'],
+    ['Arkansas', 'AR'],
+    ['California', 'CA'],
+    ['Colorado', 'CO'],
+    ['Connecticut', 'CT'],
+    ['Delaware', 'DE'],
+    ['Florida', 'FL'],
+    ['Georgia', 'GA'],
+    ['Hawaii', 'HI'],
+    ['Idaho', 'ID'],
+    ['Illinois', 'IL'],
+    ['Indiana', 'IN'],
+    ['Iowa', 'IA'],
+    ['Kansas', 'KS'],
+    ['Kentucky', 'KY'],
+    ['Louisiana', 'LA'],
+    ['Maine', 'ME'],
+    ['Maryland', 'MD'],
+    ['Massachusetts', 'MA'],
+    ['Michigan', 'MI'],
+    ['Minnesota', 'MN'],
+    ['Mississippi', 'MS'],
+    ['Missouri', 'MO'],
+    ['Montana', 'MT'],
+    ['Nebraska', 'NE'],
+    ['Nevada', 'NV'],
+    ['New Hampshire', 'NH'],
+    ['New Jersey', 'NJ'],
+    ['New Mexico', 'NM'],
+    ['New York', 'NY'],
+    ['North Carolina', 'NC'],
+    ['North Dakota', 'ND'],
+    ['Ohio', 'OH'],
+    ['Oklahoma', 'OK'],
+    ['Oregon', 'OR'],
+    ['Pennsylvania', 'PA'],
+    ['Rhode Island', 'RI'],
+    ['South Carolina', 'SC'],
+    ['South Dakota', 'SD'],
+    ['Tennessee', 'TN'],
+    ['Texas', 'TX'],
+    ['Utah', 'UT'],
+    ['Vermont', 'VT'],
+    ['Virginia', 'VA'],
+    ['Washington', 'WA'],
+    ['West Virginia', 'WV'],
+    ['Wisconsin', 'WI'],
+    ['Wyoming', 'WY'],
+    ['United States', 'USA']
+  ];
+  if (name) {
+    for (let i = 0; i < statesAndCountries.length; i++) {
+      if (statesAndCountries[i][0] == name) {
+        console.log(statesAndCountries[i][1])
+        return (statesAndCountries[i][1]);
+      }
+    }
+  }
+}
+
+function addCommas(nStr: string) {
+  nStr += '';
+  var x = nStr.split('.');
+  var x1 = x[0];
+  var x2 = x.length > 1 ? '.' + x[1] : '';
+  var rgx = /(\d+)(\d{3})/;
+  while (rgx.test(x1)) {
+    x1 = x1.replace(rgx, '$1' + ',' + '$2');
+  }
+  return x1 + x2;
 }

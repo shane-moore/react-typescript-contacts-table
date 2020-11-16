@@ -35,9 +35,9 @@ export interface GeoIPS {
 
 export interface GeoAddress {
   city: string,
-  country: string,
+  country: string | undefined,
   id: string,
-  state: string
+  state: string | undefined
 }
 
 
