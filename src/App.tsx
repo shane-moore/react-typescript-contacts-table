@@ -23,7 +23,6 @@ function App() {
       const json: JSONObject = await response.json();
       // pass API results along to be filtered and formatted and return back an updated cRMList state variable
       setCRMList(filterAPIData(json));
-
     }
   }
 
