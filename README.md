@@ -49,4 +49,4 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 - Per design guide, contact details rows should be 32px without a gravatar and have 8px of padding-top and padding-bottom if there is space in the row.  If the text needs to wrap, I assumed it was preferable to maintain the padding and allow the row height to grow.
 - I assumed that the deal's number should be listed in the Deals column as opposed to the total number of deals for that client.
 - I assumed a 40px margin top, right, bottom, and left was adequate.
-- I assumed some padding to the left of contacts should be kept in order to preserve space for a checkbox adnd gravatar.
+- I assumed some padding to the left of contacts should be kept in order to preserve space for a checkbox and gravatar.
