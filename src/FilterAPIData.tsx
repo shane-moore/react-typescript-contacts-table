@@ -68,13 +68,10 @@ function getContactLocation(json: JSONObject, contact: ContactLookup, contactDet
       // loop over geoAddresses and if there is an id match, set location to the corresponding city, state, and country
       json.geoAddresses.forEach((address: GeoAddress) => {
         if (address.id == geo.geoaddrid) {
-          console.log(address.state)
           if (address.state && address.state.length > 3) {
             address.state = abbrStateOrCountry(address.state);
             address.country = abbrStateOrCountry(address.country);
           }
-
-          console.log(address.state)
           location = `${address.city}, ${address.state}, ${address.country}`;
         }
       })
@@ -234,7 +231,6 @@ function abbrStateOrCountry(name: string | undefined): string | undefined {
   if (name) {
     for (let i = 0; i < statesAndCountries.length; i++) {
       if (statesAndCountries[i][0] == name) {
-        console.log(statesAndCountries[i][1])
         return (statesAndCountries[i][1]);
       }
     }
