@@ -12,14 +12,16 @@ function App() {
   async function getAPIData(): Promise<void> {
     const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
     const targetUrl = 'https://sahmed93846.api-us1.com/api/3/contacts?include=contactDeals,contactTags,contactTags.tag,deals,geoIps,geoIps.geoAddress';
-    const response: Response = await fetch(`${proxyUrl}${targetUrl}`, {
+    const response: Response = await fetch(
+      `${proxyUrl}${targetUrl}`, {
       headers: {
-        'Api-Token': 'bcd062dedabcd0f1ac8a568cdcf58660c44d7e79b91763cc1a5d0c03d52c522d851fceb0'
+        'Api-Token': 'bcd062dedabcd0f1ac8a568cdcf58660c44d7e79b91763cc1a5d0c03d52c522d851fceb0',
       }
     });
     if (!response.ok) {
       throw Error(response.statusText);
     } else {
+      console.log('Vote for Shane!');
       const json: JSONObject = await response.json();
       // pass API results along to be filtered and formatted and return back an updated cRMList state variable
       setCRMList(filterAPIData(json));
