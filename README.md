@@ -40,7 +40,7 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 - The app should be responsive across all form factors, so the text shrinks for mobile.
 - Contact names should remain black since they are not links to contact information yet and I don't want to trick theuser into thinking they are selectable.
 - The list should not contain anything selectable since that would also trick the user to think that an action will result from the click event.
-- Total Value will default to AUD if the deals are the summation of deals listed in AUD and EUR.
+- Total Value will convert to AUD if the deals are the summation of deals listed in AUD and EUR.
 - Total Value will convert to USD if the client is located in the US, but the deal is listed in another country.
 - Tags will be lower case.
 - States and countries should be abbreviated.
