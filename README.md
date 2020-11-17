@@ -3,7 +3,7 @@ Contacts Table App grabs artificial CRM client data via a RESTful API call and r
 
 The app is powered by React and implements TypeScript, SCSS, and semantic HTML.
 
-The production app is hosted via Netlify at https://[github-stars-search.netlify.app/](https://react-typescript-contacts-table.netlify.app/).
+The https encrypted production app is hosted via Netlify at https://react-typescript-contacts-table.netlify.app/.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
